@@ -1,0 +1,26 @@
+{
+  "name": "tab-news",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "lint:check": "prettier --check .",
+    "lint:fix": "prettier --write ."
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "lucide-react": "^0.503.0",
+    "next": "^13.1.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "styled-components": "^6.1.16"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.15",
+    "postcss": "^8.4.31",
+    "prettier": "^3.5.3",
+    "tailwindcss": "^3.3.3"
+  }
+}
