@@ -1,764 +1,194 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gabriel Carvalho — Full-Stack Developer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; background: #050810; }
-  body { margin: 0; background: #050810; }
-  ::selection { background: rgba(52,227,212,0.3); color: #fff; }
-  @keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
-  @keyframes drift { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-  @keyframes pulseDot { 0%,100%{opacity:1; box-shadow:0 0 12px #34e3d4} 50%{opacity:.6; box-shadow:0 0 22px #34e3d4} }
-  @keyframes shimmer { 0%{background-position:-200% 50%} 100%{background-position:200% 50%} }
-  *::-webkit-scrollbar { width: 8px; }
-  *::-webkit-scrollbar-track { background: transparent; }
-  *::-webkit-scrollbar-thumb { background: rgba(52,227,212,0.25); border-radius: 8px; }
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-  }
-  .nav-link { color: #8b95a8; text-decoration: none; transition: color .25s; }
-  .nav-link:hover { color: #e8ecf4; }
-  .btn-primary { display: inline-flex; align-items: center; gap: 9px; padding: 13px 24px; border-radius: 11px; background: #34e3d4; color: #05221f; font-weight: 700; text-decoration: none; font-size: 14.5px; box-shadow: 0 8px 30px rgba(52,227,212,0.3); transition: transform .25s; }
-  .btn-primary:hover { transform: translateY(-3px); }
-  .btn-secondary { display: inline-flex; align-items: center; gap: 9px; padding: 13px 24px; border-radius: 11px; background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.09); color: #e8ecf4; font-weight: 600; text-decoration: none; font-size: 14.5px; transition: border-color .25s, transform .25s; }
-  .btn-secondary:hover { border-color: #34e3d4; transform: translateY(-3px); }
-  .tech-card { position: relative; padding: 22px 20px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.025); overflow: hidden; transition: border-color .3s, transform .15s; transform-style: preserve-3d; }
-  .tech-card:hover { border-color: #34e3d4; }
-  .project-card { position: relative; border-radius: 18px; border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.025); overflow: hidden; transition: border-color .3s, box-shadow .3s; transform-style: preserve-3d; }
-  .project-card:hover { border-color: #34e3d4; box-shadow: 0 24px 60px rgba(0,0,0,0.45); }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gabriel Carvalho — Full-Stack Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
-<body style="position:relative; background:#050810; color:#e8ecf4; font-family:'Manrope',sans-serif;">
+<body>
 
-<!-- ambient bg -->
-<canvas id="bgCanvas" style="position:fixed; inset:0; width:100vw; height:100vh; z-index:0; pointer-events:none; opacity:0.7;"></canvas>
-<div id="glowOverlay" style="position:fixed; inset:0; z-index:0; pointer-events:none; background:radial-gradient(60% 50% at 50% 35%, rgba(52,227,212,0.10), transparent 70%), radial-gradient(70% 60% at 80% 90%, rgba(143,123,255,0.10), transparent 70%); transition:opacity .4s;"></div>
-<div style="position:fixed; inset:0; z-index:0; pointer-events:none; opacity:0.35; background-image:linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size:80px 80px; mask-image:radial-gradient(100% 80% at 50% 30%, #000 30%, transparent 80%);"></div>
+  <canvas id="bgCanvas" class="bg-canvas"></canvas>
+  <div class="bg-glow"></div>
+  <div class="bg-mesh"></div>
 
-<!-- progress bar -->
-<div style="position:fixed; top:0; left:0; right:0; height:2px; z-index:60; background:rgba(255,255,255,0.04);">
-  <div id="progressBar" style="height:100%; width:0%; background:linear-gradient(90deg, #34e3d4, #8f7bff); box-shadow:0 0 12px #34e3d4; transition:width .1s linear;"></div>
-</div>
-
-<!-- NAV -->
-<nav id="mainNav" style="position:fixed; top:0; left:0; right:0; z-index:50; display:flex; align-items:center; justify-content:space-between; padding:18px clamp(20px,5vw,56px); backdrop-filter:blur(16px); background:linear-gradient(180deg, rgba(5,8,16,0.8), rgba(5,8,16,0.3)); border-bottom:1px solid rgba(255,255,255,0.09);">
-  <a href="#top" style="display:flex; align-items:center; gap:11px; text-decoration:none; color:#e8ecf4;">
-    <span style="display:grid; place-items:center; width:38px; height:38px; border-radius:10px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.025); box-shadow:0 0 22px rgba(52,227,212,0.18) inset;">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 8l4 4-4 4" stroke="#34e3d4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 17h7" stroke="#34e3d4" stroke-width="2.4" stroke-linecap="round"/></svg>
-    </span>
-    <span style="font-family:'Space Grotesk',sans-serif; font-weight:600; letter-spacing:-0.01em; font-size:15px;">gabrielcarv<span style="color:#8b95a8;">.com.br</span></span>
-  </a>
-  <div style="display:flex; align-items:center; gap:clamp(12px,2.4vw,30px);">
-    <div id="navLinks" style="display:flex; align-items:center; gap:clamp(10px,2vw,26px); font-size:14px;">
-      <a href="#stack" class="nav-link" id="navStack">Stack</a>
-      <a href="#projetos" class="nav-link" id="navProjects">Projetos</a>
-      <a href="#jornada" class="nav-link" id="navJourney">Jornada</a>
-      <a href="#contato" class="nav-link" id="navContact">Contato</a>
-    </div>
-    <button id="langToggle" onclick="toggleLang()" style="display:flex; align-items:center; gap:0; padding:5px; border-radius:999px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.025); cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700;">
-      <span id="ptBtn" style="padding:5px 11px; border-radius:999px; background:#34e3d4; color:#05221f;">PT</span>
-      <span id="enBtn" style="padding:5px 11px; border-radius:999px; color:#8b95a8;">EN</span>
-    </button>
+  <div class="progress">
+    <div id="progressBar" class="progress__bar"></div>
   </div>
-</nav>
 
-<!-- STAGE (scroll real estate) -->
-<section id="top" style="position:relative; z-index:1; height:500vh; pointer-events:none;"></section>
-
-<!-- Fixed overlay (stage content) -->
-<div id="stageOverlay" style="position:fixed; top:0; left:0; right:0; height:100vh; z-index:5; pointer-events:auto; will-change:transform;">
-  <div id="stageGrid" style="position:absolute; inset:0; display:grid; grid-template-columns:1fr 1.1fr 1fr; gap:0; padding:120px clamp(24px,6vw,80px) 80px; align-items:center;">
-
-    <!-- LEFT: chapter text -->
-    <div style="position:relative; z-index:2; align-self:center;">
-      <div id="chaptersContainer" style="position:relative; min-height:280px;"></div>
+  <nav id="mainNav" class="nav">
+    <a href="#top" class="nav__brand">
+      <span class="nav__logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 8l4 4-4 4" stroke="#34e3d4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 17h7" stroke="#34e3d4" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="nav__wordmark">gabrielcarv<span>.com.br</span></span>
+    </a>
+    <div class="nav__right">
+      <div id="navLinks" class="nav__links">
+        <a href="#stack" class="nav__link" id="navStack">Stack</a>
+        <a href="#projetos" class="nav__link" id="navProjects">Projetos</a>
+        <a href="#jornada" class="nav__link" id="navJourney">Jornada</a>
+        <a href="#contato" class="nav__link" id="navContact">Contato</a>
+      </div>
+      <button id="langToggle" class="lang" type="button" onclick="toggleLang()">
+        <span id="ptBtn" class="lang__pill is-active">PT</span>
+        <span id="enBtn" class="lang__pill">EN</span>
+      </button>
     </div>
+  </nav>
 
-    <!-- CENTER: 3D carousel -->
-    <div style="position:relative; z-index:1; display:flex; justify-content:center; align-items:center;">
-      <div style="perspective:1400px; perspective-origin:50% 50%; transform-style:preserve-3d;">
-        <div id="carousel" style="--depth:260px; position:relative; width:min(360px,38vw); height:min(440px,56vh); transform-style:preserve-3d; transition:transform .12s linear; will-change:transform; transform:rotateX(-6deg) rotateY(0deg);">
-          <div style="position:absolute; left:50%; bottom:-60px; transform:translateX(-50%); width:280px; height:40px; border-radius:50%; background:radial-gradient(closest-side, rgba(52,227,212,0.4), transparent); filter:blur(20px);"></div>
+  <section id="top" class="stage-spacer"></section>
 
-          <!-- FACE 0: CODE -->
-          <div data-face="0" style="position:absolute; inset:0; transform:rotateY(0deg) translateZ(var(--depth)); border-radius:18px; border:1px solid rgba(255,255,255,0.09); background:linear-gradient(160deg, #0c1220, #060912); box-shadow:0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(52,227,212,0.08) inset; overflow:hidden; backface-visibility:hidden; opacity:1; transition:opacity .4s ease;">
-            <div style="display:flex; align-items:center; gap:8px; padding:11px 14px; border-bottom:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.02);">
-              <span style="width:11px;height:11px;border-radius:50%;background:#ff5f57;"></span>
-              <span style="width:11px;height:11px;border-radius:50%;background:#febc2e;"></span>
-              <span style="width:11px;height:11px;border-radius:50%;background:#28c840;"></span>
-              <span style="margin-left:10px; font-family:'JetBrains Mono',monospace; font-size:11px; color:#8b95a8;">gabriel.ts</span>
-            </div>
-            <pre style="margin:0; padding:18px 16px; font-family:'JetBrains Mono',monospace; font-size:12.5px; line-height:1.7; color:#b3bccc; white-space:pre; overflow:hidden;"><span style="color:#8f7bff;">const</span> <span style="color:#34e3d4;">dev</span> = {
-  <span style="color:#e8ecf4;">name</span>: <span style="color:#fbbf77;">'Gabriel'</span>,
-  <span style="color:#e8ecf4;">role</span>: <span style="color:#fbbf77;">'Full-Stack'</span>,
-  <span style="color:#e8ecf4;">stack</span>: [<span style="color:#fbbf77;">'TS'</span>,<span style="color:#fbbf77;">'Node'</span>,<span style="color:#fbbf77;">'Py'</span>],
-  <span style="color:#e8ecf4;">years</span>: <span style="color:#fbbf77;">4</span>,
-  <span style="color:#e8ecf4;">ship</span>: () =&gt; <span style="color:#34e3d4;">true</span>,
-};
+  <div id="stageOverlay" class="stage">
+    <div id="stageGrid" class="stage__grid">
 
-<span style="color:#8f7bff;">export default</span> <span style="color:#34e3d4;">dev</span>;</pre>
-          </div>
+      <div class="stage__col stage__col--text">
+        <div id="chaptersContainer" class="chapters"></div>
+      </div>
 
-          <!-- FACE 1: TERMINAL -->
-          <div data-face="1" style="position:absolute; inset:0; transform:rotateY(90deg) translateZ(var(--depth)); border-radius:18px; border:1px solid rgba(255,255,255,0.09); background:linear-gradient(160deg, #0c1220, #060912); box-shadow:0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(143,123,255,0.08) inset; overflow:hidden; backface-visibility:hidden; opacity:0; transition:opacity .4s ease;">
-            <div style="display:flex; align-items:center; gap:8px; padding:11px 14px; border-bottom:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.02);">
-              <span style="width:11px;height:11px;border-radius:50%;background:#ff5f57;"></span>
-              <span style="width:11px;height:11px;border-radius:50%;background:#febc2e;"></span>
-              <span style="width:11px;height:11px;border-radius:50%;background:#28c840;"></span>
-              <span style="margin-left:10px; font-family:'JetBrains Mono',monospace; font-size:11px; color:#8b95a8;">~ — zsh</span>
-            </div>
-            <div style="padding:18px 16px; font-family:'JetBrains Mono',monospace; font-size:12.5px; line-height:1.85;">
-              <div><span style="color:#34e3d4;">➜</span> <span style="color:#8f7bff;">~</span> whoami</div>
-              <div style="color:#e8ecf4; padding-left:14px;">gabriel-carvalho</div>
-              <div style="margin-top:6px;"><span style="color:#34e3d4;">➜</span> <span style="color:#8f7bff;">~</span> cat stack.txt</div>
-              <div style="color:#b3bccc; padding-left:14px;">HTML · CSS · JS · TS</div>
-              <div style="color:#b3bccc; padding-left:14px;">Node · Python · Django</div>
-              <div style="color:#b3bccc; padding-left:14px;">Angular · Elixir · SQL</div>
-              <div style="margin-top:6px;"><span style="color:#34e3d4;">➜</span> <span style="color:#8f7bff;">~</span> uptime</div>
-              <div style="color:#fbbf77; padding-left:14px;">4+ yrs @ Bradesco</div>
-              <div style="margin-top:6px;"><span style="color:#34e3d4;">➜</span> <span style="color:#8f7bff;">~</span> <span style="display:inline-block; width:8px; height:14px; background:#34e3d4; animation:blink 1s steps(1) infinite; vertical-align:-2px;"></span></div>
-            </div>
-          </div>
+      <div class="stage__col stage__col--carousel">
+        <div class="carousel-perspective">
+          <div id="carousel" class="carousel">
+            <div class="carousel__glow"></div>
 
-          <!-- FACE 2: PHOTO -->
-          <div data-face="2" style="position:absolute; inset:0; transform:rotateY(180deg) translateZ(var(--depth)); border-radius:18px; border:1px solid rgba(255,255,255,0.09); background:#0c1220; box-shadow:0 30px 60px rgba(0,0,0,0.5); overflow:hidden; backface-visibility:hidden; opacity:0; transition:opacity .4s ease;">
-            <img src="images/gabriel.jpeg" alt="Gabriel" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;">
-            <div style="position:absolute; inset:0; background:linear-gradient(180deg, transparent 40%, rgba(5,8,16,0.85) 100%);"></div>
-            <div style="position:absolute; left:18px; right:18px; bottom:18px;">
-              <div style="display:inline-flex; align-items:center; gap:8px; padding:5px 10px; border-radius:999px; background:rgba(5,8,16,0.7); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.09); font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#34e3d4; margin-bottom:10px;">
-                <span style="width:6px;height:6px;border-radius:50%;background:#34e3d4;box-shadow:0 0 10px #34e3d4;"></span>
-                <span id="faceLive">disponível</span>
+            <div data-face="0" class="face face--code">
+              <div class="win__bar">
+                <span class="win__dot win__dot--red"></span>
+                <span class="win__dot win__dot--yellow"></span>
+                <span class="win__dot win__dot--green"></span>
+                <span class="win__title">gabriel.ts</span>
               </div>
-              <div style="font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:22px; color:#fff; letter-spacing:-0.01em;">Gabriel Carvalho</div>
-              <div id="faceRole" style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#b3bccc; margin-top:2px;">Full-Stack Developer</div>
+              <pre class="code"><span class="c-acc2">const</span> <span class="c-acc">dev</span> = {
+  <span class="c-text">name</span>: <span class="c-amber">'Gabriel'</span>,
+  <span class="c-text">role</span>: <span class="c-amber">'Full-Stack'</span>,
+  <span class="c-text">stack</span>: [<span class="c-amber">'TS'</span>,<span class="c-amber">'Node'</span>,<span class="c-amber">'Py'</span>],
+  <span class="c-text">years</span>: <span class="c-amber">4</span>,
+  <span class="c-text">ship</span>: () =&gt; <span class="c-acc">true</span>,
+};
+
+<span class="c-acc2">export default</span> <span class="c-acc">dev</span>;</pre>
+            </div>
+
+            <div data-face="1" class="face face--terminal">
+              <div class="win__bar">
+                <span class="win__dot win__dot--red"></span>
+                <span class="win__dot win__dot--yellow"></span>
+                <span class="win__dot win__dot--green"></span>
+                <span class="win__title">~ — zsh</span>
+              </div>
+              <div class="term">
+                <div><span class="c-acc">➜</span> <span class="c-acc2">~</span> whoami</div>
+                <div class="c-text term__indent">gabriel-carvalho</div>
+                <div class="term__row"><span class="c-acc">➜</span> <span class="c-acc2">~</span> cat stack.txt</div>
+                <div class="c-soft term__indent">HTML · CSS · JS · TS</div>
+                <div class="c-soft term__indent">Node · Python · Django</div>
+                <div class="c-soft term__indent">Angular · Elixir · SQL</div>
+                <div class="term__row"><span class="c-acc">➜</span> <span class="c-acc2">~</span> uptime</div>
+                <div class="c-amber term__indent">4+ yrs @ Bradesco</div>
+                <div class="term__row"><span class="c-acc">➜</span> <span class="c-acc2">~</span> <span class="term__cursor"></span></div>
+              </div>
+            </div>
+
+            <div data-face="2" class="face face--photo">
+              <img src="images/gabriel.jpeg" alt="Gabriel Carvalho" class="face__img">
+              <div class="face__scrim"></div>
+              <div class="face__caption">
+                <div class="badge-live">
+                  <span class="badge-live__dot"></span>
+                  <span id="faceLive">disponível</span>
+                </div>
+                <div class="face__name">Gabriel Carvalho</div>
+                <div id="faceRole" class="face__role">Full-Stack Developer</div>
+              </div>
+            </div>
+
+            <div data-face="3" class="face face--stack">
+              <div class="face__label">// STACK</div>
+              <div id="faceTechGrid" class="face-techs"></div>
             </div>
           </div>
-
-          <!-- FACE 3: STACK -->
-          <div data-face="3" style="position:absolute; inset:0; transform:rotateY(270deg) translateZ(var(--depth)); border-radius:18px; border:1px solid rgba(255,255,255,0.09); background:linear-gradient(160deg, #0c1220, #060912); box-shadow:0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(52,227,212,0.08) inset; overflow:hidden; padding:22px 18px; backface-visibility:hidden; opacity:0; transition:opacity .4s ease;">
-            <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#34e3d4; letter-spacing:0.12em; margin-bottom:14px;">// STACK</div>
-            <div id="faceTechGrid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:8px;"></div>
-          </div>
         </div>
       </div>
-    </div>
 
-    <!-- RIGHT: chapter pips -->
-    <div style="position:relative; z-index:2; align-self:center; justify-self:end;">
-      <div id="chapterPips" style="display:flex; flex-direction:column; gap:14px;"></div>
-    </div>
-  </div>
-
-  <!-- scroll hint -->
-  <div id="scrollHint" style="position:absolute; bottom:30px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:8px; color:#8b95a8; font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.18em; opacity:1; transition:opacity .4s;">
-    <span id="hintText">ROLE PARA EXPLORAR</span>
-    <span style="display:block; width:1px; height:30px; background:linear-gradient(180deg, #34e3d4, transparent);"></span>
-  </div>
-</div>
-
-<!-- RELEASE SECTION -->
-<section style="position:relative; z-index:1; padding:clamp(60px,12vh,140px) clamp(20px,7vw,110px) 20px; max-width:1180px; margin:0 auto; text-align:center;">
-  <div data-reveal style="display:inline-flex; align-items:center; gap:9px; padding:6px 13px; border-radius:999px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.025); font-family:'JetBrains Mono',monospace; font-size:11px; color:#34e3d4; letter-spacing:0.12em; margin-bottom:24px;">
-    <span style="width:7px;height:7px;border-radius:50%;background:#34e3d4;box-shadow:0 0 10px #34e3d4;"></span>
-    <span id="releaseKicker">AGORA, OS DETALHES</span>
-  </div>
-  <h1 data-reveal id="releaseTitle" style="margin:0 auto; max-width:900px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(40px,7vw,84px); line-height:1.02; letter-spacing:-0.03em;">
-    Tudo o que você precisa saber sobre o <span style="background:linear-gradient(110deg, #34e3d4, #8f7bff); -webkit-background-clip:text; background-clip:text; color:transparent;">Gabriel.</span>
-  </h1>
-  <p data-reveal id="releaseBody" style="margin:26px auto 36px; max-width:540px; color:#b3bccc; font-size:clamp(15px,1.5vw,18px); line-height:1.65;">Stack, projetos, trajetória e contato — sem rodeios.</p>
-  <div data-reveal style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-    <a href="#projetos" class="btn-primary" id="releaseCta1">Ver projetos →</a>
-    <a href="#contato" class="btn-secondary" id="releaseCta2">Entrar em contato</a>
-  </div>
-</section>
-
-<!-- STACK SECTION -->
-<section id="stack" style="position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:clamp(60px,10vh,120px) clamp(20px,7vw,110px);">
-  <div data-reveal style="margin-bottom:46px;">
-    <p id="stackKicker" style="margin:0 0 14px; font-family:'JetBrains Mono',monospace; color:#34e3d4; font-size:12px; letter-spacing:0.14em;">// STACK</p>
-    <h2 id="stackTitle" style="margin:0 0 12px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(30px,4.5vw,52px); letter-spacing:-0.02em;">Tecnologias que eu domino</h2>
-    <p id="stackSub" style="margin:0; color:#8b95a8; font-size:clamp(15px,1.4vw,17px); max-width:560px; line-height:1.6;">O conjunto de ferramentas que uso no dia a dia, do front ao back e à camada de dados.</p>
-  </div>
-  <div id="techGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:14px;"></div>
-</section>
-
-<!-- PROJECTS SECTION -->
-<section id="projetos" style="position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:clamp(40px,8vh,90px) clamp(20px,7vw,110px);">
-  <div data-reveal style="margin-bottom:46px;">
-    <p id="projectsKicker" style="margin:0 0 14px; font-family:'JetBrains Mono',monospace; color:#34e3d4; font-size:12px; letter-spacing:0.14em;">// TRABALHOS</p>
-    <h2 id="projectsTitle" style="margin:0 0 12px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(30px,4.5vw,52px); letter-spacing:-0.02em;">Projetos selecionados</h2>
-    <p id="projectsSub" style="margin:0; color:#8b95a8; font-size:clamp(15px,1.4vw,17px); max-width:560px; line-height:1.6;">Uma amostra do que construo. Em breve casos reais — por enquanto, espaços reservados.</p>
-  </div>
-  <div id="projectsGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:22px; perspective:1200px;"></div>
-</section>
-
-<!-- JOURNEY SECTION -->
-<section id="jornada" style="position:relative; z-index:1; max-width:900px; margin:0 auto; padding:clamp(50px,9vh,110px) clamp(20px,7vw,110px);">
-  <div data-reveal style="margin-bottom:46px;">
-    <p id="journeyKicker" style="margin:0 0 14px; font-family:'JetBrains Mono',monospace; color:#34e3d4; font-size:12px; letter-spacing:0.14em;">// TRAJETÓRIA</p>
-    <h2 id="journeyTitle" style="margin:0; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(30px,4.5vw,52px); letter-spacing:-0.02em;">Minha jornada até aqui</h2>
-  </div>
-  <div style="position:relative;">
-    <div style="position:absolute; left:7px; top:6px; bottom:6px; width:1px; background:linear-gradient(180deg, #34e3d4, #8f7bff, transparent);"></div>
-    <div id="journeyList"></div>
-  </div>
-</section>
-
-<!-- CONTACT SECTION -->
-<section id="contato" style="position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:clamp(60px,11vh,140px) clamp(20px,7vw,110px) 60px;">
-  <div data-reveal style="position:relative; border-radius:26px; border:1px solid rgba(255,255,255,0.09); background:linear-gradient(160deg, rgba(52,227,212,0.06), rgba(143,123,255,0.05)); padding:clamp(40px,7vw,80px) clamp(24px,5vw,60px); overflow:hidden; text-align:center;">
-    <div style="position:absolute; inset:0; opacity:0.4; background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px); background-size:40px 40px; mask-image:radial-gradient(80% 80% at 50% 0%, #000, transparent);"></div>
-    <p id="contactKicker" style="position:relative; margin:0 0 14px; font-family:'JetBrains Mono',monospace; color:#34e3d4; font-size:12px; letter-spacing:0.14em;">// CONTATO</p>
-    <h2 id="contactTitle" style="position:relative; margin:0 0 18px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(30px,5.5vw,60px); letter-spacing:-0.02em; line-height:1.04;">Vamos construir algo juntos?</h2>
-    <p id="contactText" style="position:relative; margin:0 auto 36px; max-width:480px; color:#b3bccc; font-size:clamp(15px,1.5vw,18px); line-height:1.65;">Aberto a novas oportunidades, colaborações e conversas sobre tecnologia. É só chamar.</p>
-    <div style="position:relative; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-      <a href="https://github.com/bielcarvalhoz" target="_blank" rel="noopener" class="btn-primary">GitHub ↗</a>
-      <a href="https://www.linkedin.com/in/gabriel-carvalho-fernandes00/" target="_blank" rel="noopener" class="btn-secondary">LinkedIn ↗</a>
-    </div>
-  </div>
-  <footer style="margin-top:40px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; color:#8b95a8; font-size:12px; font-family:'JetBrains Mono',monospace;">
-    <span>© 2026 Gabriel Carvalho Fernandes</span>
-    <span id="builtWith">Feito com HTML, CSS & JS</span>
-  </footer>
-</section>
-
-<script>
-// ─── State ───────────────────────────────────────────────────────────────────
-let lang = 'pt';
-let activeChapter = 0;
-let scrollP = 0;
-let targetRot = 0;
-let currentRot = 0;
-let mouse = { x: -9999, y: -9999, ax: -9999, ay: -9999 };
-let animRafId, canvasRafId;
-let intersectionObserver;
-let faces;
-
-// ─── Content ─────────────────────────────────────────────────────────────────
-const content = {
-  pt: {
-    nav: { stack: 'Stack', projects: 'Projetos', journey: 'Jornada', contact: 'Contato' },
-    face: { live: 'disponível', role: 'Full-Stack Developer' },
-    hint: 'ROLE PARA EXPLORAR',
-    chapters: [
-      { num: '1', label: 'CODE', kicker: 'CÓDIGO', title: 'Escrevo o que ainda não existe.', body: 'Construindo a web — do front-end TypeScript ao back-end em Node, Python e Elixir.' },
-      { num: '2', label: 'SHIP', kicker: 'TERMINAL', title: 'Há 4 anos colocando código em produção.', body: 'Cresci de estagiário a júnior no Bradesco, entregando aplicações reais que rodam todo dia.' },
-      { num: '3', label: 'WHO', kicker: 'QUEM SOU', title: 'Gabriel Carvalho — 22 anos, de São Paulo.', body: 'Formado em Ciência da Computação pela USTJ, com base técnica desde a Fundação Bradesco.' },
-      { num: '4', label: 'STACK', kicker: 'STACK', title: 'Uma stack ampla, do front ao banco.', body: 'TypeScript, Angular, Node, Python, Django, Elixir, SQL — e a curiosidade pra ir além.' }
-    ],
-    release: { kicker: 'AGORA, OS DETALHES', title1: 'Tudo o que você precisa saber sobre o', title2: 'Gabriel.', body: 'Stack, projetos, trajetória e contato — sem rodeios.', cta1: 'Ver projetos →', cta2: 'Entrar em contato' },
-    stackS: { kicker: '// STACK', title: 'Tecnologias que eu domino', sub: 'O conjunto de ferramentas que uso no dia a dia, do front ao back e à camada de dados.' },
-    projects: { kicker: '// TRABALHOS', title: 'Projetos selecionados', sub: 'Uma amostra do que construo. Em breve casos reais — por enquanto, espaços reservados.', demo: 'Demo', code: 'Código' },
-    journey: { kicker: '// TRAJETÓRIA', title: 'Minha jornada até aqui' },
-    contact: { kicker: '// CONTATO', title: 'Vamos construir algo juntos?', text: 'Aberto a novas oportunidades, colaborações e conversas sobre tecnologia. É só chamar.', built: 'Feito com HTML, CSS & JS' }
-  },
-  en: {
-    nav: { stack: 'Stack', projects: 'Projects', journey: 'Journey', contact: 'Contact' },
-    face: { live: 'available', role: 'Full-Stack Developer' },
-    hint: 'SCROLL TO EXPLORE',
-    chapters: [
-      { num: '1', label: 'CODE', kicker: 'CODE', title: "I write what doesn't exist yet.", body: 'Building the web — from a TypeScript front end to Node, Python and Elixir on the back end.' },
-      { num: '2', label: 'SHIP', kicker: 'TERMINAL', title: '4 years shipping code to production.', body: 'I grew from intern to junior at Bradesco, delivering real applications that run every day.' },
-      { num: '3', label: 'WHO', kicker: 'WHO I AM', title: 'Gabriel Carvalho — 22, from São Paulo.', body: 'CS degree from USTJ, with a technical foundation built since high school at Fundação Bradesco.' },
-      { num: '4', label: 'STACK', kicker: 'STACK', title: 'A broad stack, from front end to database.', body: 'TypeScript, Angular, Node, Python, Django, Elixir, SQL — and the curiosity to go further.' }
-    ],
-    release: { kicker: 'NOW, THE DETAILS', title1: 'Everything you need to know about', title2: 'Gabriel.', body: 'Stack, projects, journey and contact — straight to the point.', cta1: 'View projects →', cta2: 'Get in touch' },
-    stackS: { kicker: '// STACK', title: 'Technologies I work with', sub: 'The toolkit I use every day, from the front end to the back end and the data layer.' },
-    projects: { kicker: '// WORK', title: 'Selected projects', sub: 'A sample of what I build. Real case studies coming soon — placeholders for now.', demo: 'Demo', code: 'Code' },
-    journey: { kicker: '// PATH', title: 'My journey so far' },
-    contact: { kicker: '// CONTACT', title: "Let's build something together?", text: 'Open to new opportunities, collaborations and conversations about tech. Just reach out.', built: 'Built with HTML, CSS & JS' }
-  }
-};
-
-const data = {
-  pt: {
-    techs: [
-      { name: 'HTML', cat: 'Frontend', glyph: '</>' },
-      { name: 'CSS', cat: 'Frontend', glyph: '#' },
-      { name: 'JavaScript', cat: 'Frontend', glyph: 'JS' },
-      { name: 'TypeScript', cat: 'Frontend', glyph: 'TS' },
-      { name: 'Angular', cat: 'Frontend', glyph: 'A' },
-      { name: 'Node.js', cat: 'Backend', glyph: 'N' },
-      { name: 'Python', cat: 'Backend', glyph: 'PY' },
-      { name: 'Django', cat: 'Backend', glyph: 'DJ' },
-      { name: 'Elixir', cat: 'Backend', glyph: 'EX' },
-      { name: 'SQL', cat: 'Dados', glyph: 'DB' }
-    ],
-    faceTechs: [
-      { name: 'TypeScript', color: '#34e3d4' },
-      { name: 'Angular', color: '#8f7bff' },
-      { name: 'Node.js', color: '#34e3d4' },
-      { name: 'Python', color: '#fbbf77' },
-      { name: 'Django', color: '#8f7bff' },
-      { name: 'Elixir', color: '#fbbf77' },
-      { name: 'SQL', color: '#34e3d4' },
-      { name: 'HTML/CSS', color: '#8f7bff' }
-    ],
-    projects: [
-      { n: '01', title: 'Projeto em destaque', desc: 'Substitua por um caso real: o problema, sua solução e o impacto.', tags: ['TypeScript', 'Angular', 'Node'], shot: 'imagem do projeto' },
-      { n: '02', title: 'Aplicação web', desc: 'Espaço reservado para um produto que você construiu de ponta a ponta.', tags: ['Python', 'Django', 'SQL'], shot: 'imagem do projeto' },
-      { n: '03', title: 'Experimento', desc: 'Um projeto pessoal, side-project ou prova de conceito.', tags: ['JavaScript', 'Node', 'Elixir'], shot: 'imagem do projeto' },
-      { n: '04', title: 'Open source', desc: 'Uma contribuição ou biblioteca que você mantém.', tags: ['HTML', 'CSS', 'JS'], shot: 'imagem do projeto' }
-    ],
-    journey: [
-      { when: 'Out 2023 — Hoje', role: 'Desenvolvedor Web Júnior', place: 'Bradesco', desc: 'Efetivado em 14/10/2023, evoluí de estagiário a desenvolvedor júnior — há 4 anos no Bradesco, entregando aplicações web em produção.' },
-      { when: 'Set 2022', role: 'Estágio em Desenvolvimento', place: 'Bradesco', desc: 'Comecei como estagiário em setembro de 2022 — primeiros passos no ambiente corporativo, construindo interfaces e integrações reais.' },
-      { when: '2021', role: 'Ciência da Computação', place: 'USTJ', desc: 'Formado em 2021, com base em fundamentos de computação, algoritmos e engenharia de software.' },
-      { when: 'Base', role: 'Ensino Médio Técnico', place: 'Fundação Bradesco — Osasco', desc: 'Onde a base técnica e a disciplina pela tecnologia começaram.' }
-    ]
-  },
-  en: {
-    techs: [
-      { name: 'HTML', cat: 'Frontend', glyph: '</>' },
-      { name: 'CSS', cat: 'Frontend', glyph: '#' },
-      { name: 'JavaScript', cat: 'Frontend', glyph: 'JS' },
-      { name: 'TypeScript', cat: 'Frontend', glyph: 'TS' },
-      { name: 'Angular', cat: 'Frontend', glyph: 'A' },
-      { name: 'Node.js', cat: 'Backend', glyph: 'N' },
-      { name: 'Python', cat: 'Backend', glyph: 'PY' },
-      { name: 'Django', cat: 'Backend', glyph: 'DJ' },
-      { name: 'Elixir', cat: 'Backend', glyph: 'EX' },
-      { name: 'SQL', cat: 'Data', glyph: 'DB' }
-    ],
-    faceTechs: [
-      { name: 'TypeScript', color: '#34e3d4' },
-      { name: 'Angular', color: '#8f7bff' },
-      { name: 'Node.js', color: '#34e3d4' },
-      { name: 'Python', color: '#fbbf77' },
-      { name: 'Django', color: '#8f7bff' },
-      { name: 'Elixir', color: '#fbbf77' },
-      { name: 'SQL', color: '#34e3d4' },
-      { name: 'HTML/CSS', color: '#8f7bff' }
-    ],
-    projects: [
-      { n: '01', title: 'Featured project', desc: 'Replace with a real case: the problem, your solution and the impact.', tags: ['TypeScript', 'Angular', 'Node'], shot: 'project shot' },
-      { n: '02', title: 'Web application', desc: 'Placeholder for a product you built end to end.', tags: ['Python', 'Django', 'SQL'], shot: 'project shot' },
-      { n: '03', title: 'Experiment', desc: 'A personal project, side-project or proof of concept.', tags: ['JavaScript', 'Node', 'Elixir'], shot: 'project shot' },
-      { n: '04', title: 'Open source', desc: 'A contribution or library you maintain.', tags: ['HTML', 'CSS', 'JS'], shot: 'project shot' }
-    ],
-    journey: [
-      { when: 'Oct 2023 — Today', role: 'Junior Web Developer', place: 'Bradesco', desc: 'Made permanent on Oct 14, 2023, I grew from intern to junior developer — 4 years at Bradesco, shipping web apps to production.' },
-      { when: 'Sep 2022', role: 'Development Internship', place: 'Bradesco', desc: 'Started as an intern in September 2022 — first steps in a corporate environment, building real interfaces and integrations.' },
-      { when: '2021', role: 'Computer Science', place: 'USTJ', desc: 'Graduated in 2021, with a foundation in computing fundamentals, algorithms and software engineering.' },
-      { when: 'Foundation', role: 'Technical High School', place: 'Fundação Bradesco — Osasco', desc: 'Where the technical foundation and discipline for tech began.' }
-    ]
-  }
-};
-
-// ─── Render ───────────────────────────────────────────────────────────────────
-function t() { return content[lang]; }
-function d() { return data[lang]; }
-
-function renderAll() {
-  const c = t();
-  const dd = d();
-
-  // Nav
-  document.getElementById('navStack').textContent = c.nav.stack;
-  document.getElementById('navProjects').textContent = c.nav.projects;
-  document.getElementById('navJourney').textContent = c.nav.journey;
-  document.getElementById('navContact').textContent = c.nav.contact;
-
-  // Lang toggle
-  const active = 'padding:5px 11px; border-radius:999px; background:#34e3d4; color:#05221f;';
-  const inactive = 'padding:5px 11px; border-radius:999px; color:#8b95a8;';
-  document.getElementById('ptBtn').style.cssText = lang === 'pt' ? active : inactive;
-  document.getElementById('enBtn').style.cssText = lang === 'en' ? active : inactive;
-
-  // Face
-  document.getElementById('faceLive').textContent = c.face.live;
-  document.getElementById('faceRole').textContent = c.face.role;
-
-  // Hint
-  document.getElementById('hintText').textContent = c.hint;
-
-  // Release section
-  document.getElementById('releaseKicker').textContent = c.release.kicker;
-  document.getElementById('releaseTitle').innerHTML = `${c.release.title1} <span style="background:linear-gradient(110deg, #34e3d4, #8f7bff); -webkit-background-clip:text; background-clip:text; color:transparent;">${c.release.title2}</span>`;
-  document.getElementById('releaseBody').textContent = c.release.body;
-  document.getElementById('releaseCta1').textContent = c.release.cta1;
-  document.getElementById('releaseCta2').textContent = c.release.cta2;
-
-  // Stack section
-  document.getElementById('stackKicker').textContent = c.stackS.kicker;
-  document.getElementById('stackTitle').textContent = c.stackS.title;
-  document.getElementById('stackSub').textContent = c.stackS.sub;
-
-  // Tech grid
-  const techGrid = document.getElementById('techGrid');
-  techGrid.innerHTML = dd.techs.map(tech => `
-    <div class="tech-card" data-reveal data-tilt>
-      <div style="font-family:'JetBrains Mono',monospace; font-size:10.5px; color:#34e3d4; letter-spacing:0.1em; margin-bottom:10px;">${tech.cat}</div>
-      <div style="font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:18px;">${tech.name}</div>
-      <div style="position:absolute; right:-15px; bottom:-22px; font-family:'JetBrains Mono',monospace; font-size:58px; font-weight:700; color:rgba(255,255,255,0.03); line-height:1;">${tech.glyph}</div>
-    </div>
-  `).join('');
-
-  // Projects section
-  document.getElementById('projectsKicker').textContent = c.projects.kicker;
-  document.getElementById('projectsTitle').textContent = c.projects.title;
-  document.getElementById('projectsSub').textContent = c.projects.sub;
-
-  const projectsGrid = document.getElementById('projectsGrid');
-  projectsGrid.innerHTML = dd.projects.map(p => `
-    <div class="project-card" data-reveal data-tilt>
-      <div style="position:relative; aspect-ratio:16/10; background-image:repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0 10px, transparent 10px 20px); border-bottom:1px solid rgba(255,255,255,0.09); display:grid; place-items:center;">
-        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#8b95a8; letter-spacing:0.1em; text-transform:uppercase;">${p.shot}</span>
-        <span style="position:absolute; top:14px; left:14px; font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; color:#34e3d4;">${p.n}</span>
-      </div>
-      <div style="padding:22px;">
-        <h3 style="margin:0 0 8px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:20px;">${p.title}</h3>
-        <p style="margin:0 0 16px; color:#8b95a8; font-size:14px; line-height:1.6;">${p.desc}</p>
-        <div style="display:flex; flex-wrap:wrap; gap:7px; margin-bottom:16px;">
-          ${p.tags.map(tag => `<span style="font-family:'JetBrains Mono',monospace; font-size:11px; padding:4px 9px; border-radius:7px; border:1px solid rgba(255,255,255,0.09); color:#b3bccc;">${tag}</span>`).join('')}
-        </div>
-        <div style="display:flex; gap:14px; font-size:13px; font-family:'JetBrains Mono',monospace;">
-          <span style="color:#34e3d4;">${c.projects.demo} ↗</span>
-          <span style="color:#8b95a8;">${c.projects.code} ↗</span>
-        </div>
+      <div class="stage__col stage__col--pips">
+        <div id="chapterPips" class="pips"></div>
       </div>
     </div>
-  `).join('');
 
-  // Journey section
-  document.getElementById('journeyKicker').textContent = c.journey.kicker;
-  document.getElementById('journeyTitle').textContent = c.journey.title;
-
-  document.getElementById('journeyList').innerHTML = dd.journey.map(j => `
-    <div data-reveal style="position:relative; padding:0 0 30px 40px;">
-      <span style="position:absolute; left:0; top:5px; width:15px; height:15px; border-radius:50%; background:#050810; border:2px solid #34e3d4; box-shadow:0 0 14px rgba(52,227,212,0.5);"></span>
-      <div style="font-family:'JetBrains Mono',monospace; font-size:12px; color:#34e3d4; letter-spacing:0.08em; margin-bottom:6px;">${j.when}</div>
-      <h3 style="margin:0 0 3px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:19px;">${j.role} <span style="color:#8b95a8; font-weight:400;">· ${j.place}</span></h3>
-      <p style="margin:0; color:#8b95a8; font-size:14.5px; line-height:1.6;">${j.desc}</p>
+    <div id="scrollHint" class="hint">
+      <span id="hintText">ROLE PARA EXPLORAR</span>
+      <span class="hint__line"></span>
     </div>
-  `).join('');
+  </div>
 
-  // Contact section
-  document.getElementById('contactKicker').textContent = c.contact.kicker;
-  document.getElementById('contactTitle').textContent = c.contact.title;
-  document.getElementById('contactText').textContent = c.contact.text;
-  document.getElementById('builtWith').textContent = c.contact.built;
-
-  // Face tech grid
-  document.getElementById('faceTechGrid').innerHTML = dd.faceTechs.map(tech => `
-    <div style="padding:9px 11px; border-radius:9px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.02); font-family:'JetBrains Mono',monospace; font-size:12px; color:#e8ecf4; display:flex; align-items:center; gap:7px;">
-      <span style="width:6px; height:6px; border-radius:50%; background:${tech.color};"></span>${tech.name}
+  <section class="section section--release">
+    <span class="pill release__pill" data-reveal>
+      <span class="pill__dot"></span>
+      <span id="releaseKicker">AGORA, OS DETALHES</span>
+    </span>
+    <h1 id="releaseTitle" class="release__title" data-reveal>
+      Tudo o que você precisa saber sobre o <span class="text-gradient">Gabriel.</span>
+    </h1>
+    <p id="releaseBody" class="release__body" data-reveal>Stack, projetos, trajetória e contato — sem rodeios.</p>
+    <div class="actions" data-reveal>
+      <a href="#projetos" class="btn btn--primary" id="releaseCta1">Ver projetos →</a>
+      <a href="#contato" class="btn btn--secondary" id="releaseCta2">Entrar em contato</a>
     </div>
-  `).join('');
+  </section>
 
-  renderChapters();
-  initTilt();
-  if (intersectionObserver) {
-    document.querySelectorAll('[data-reveal]').forEach(el => {
-      if (el.style.opacity === '1') return;
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(28px)';
-      intersectionObserver.observe(el);
-    });
-  }
-}
+  <section id="stack" class="section section--stack">
+    <div class="section__head" data-reveal>
+      <p id="stackKicker" class="kicker">// STACK</p>
+      <h2 id="stackTitle" class="section__title">Tecnologias que eu domino</h2>
+      <p id="stackSub" class="section__sub">O conjunto de ferramentas que uso no dia a dia, do front ao back e à camada de dados.</p>
+    </div>
+    <div id="techGrid" class="tech-grid"></div>
+  </section>
 
-function renderChapters() {
-  const chapters = t().chapters;
-  const container = document.getElementById('chaptersContainer');
-  const pips = document.getElementById('chapterPips');
+  <section id="projetos" class="section section--projects">
+    <div class="section__head" data-reveal>
+      <p id="projectsKicker" class="kicker">// TRABALHOS</p>
+      <h2 id="projectsTitle" class="section__title">Projetos selecionados</h2>
+      <p id="projectsSub" class="section__sub">Uma amostra do que construo. Em breve casos reais — por enquanto, espaços reservados.</p>
+    </div>
+    <div id="projectsGrid" class="projects-grid"></div>
+  </section>
 
-  container.innerHTML = chapters.map((c, i) => {
-    const on = i === activeChapter;
-    return `
-      <div style="position:absolute; inset:0; transition:opacity .6s ease, transform .6s ease; opacity:${on ? 1 : 0}; transform:translateY(${on ? '0px' : '20px'}); pointer-events:${on ? 'auto' : 'none'};">
-        <div style="display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border-radius:999px; border:1px solid rgba(255,255,255,0.09); background:rgba(255,255,255,0.025); font-family:'JetBrains Mono',monospace; font-size:11px; color:#34e3d4; letter-spacing:0.1em; margin-bottom:22px;">
-          <span>0${c.num}</span>
-          <span style="width:4px; height:4px; border-radius:50%; background:#34e3d4;"></span>
-          <span>${c.kicker}</span>
-        </div>
-        <h2 style="margin:0 0 18px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:clamp(34px,4.6vw,58px); line-height:1.02; letter-spacing:-0.025em;">${c.title}</h2>
-        <p style="margin:0; color:#b3bccc; font-size:clamp(15px,1.3vw,17px); line-height:1.65; max-width:380px;">${c.body}</p>
+  <section id="jornada" class="section section--narrow section--journey">
+    <div class="section__head" data-reveal>
+      <p id="journeyKicker" class="kicker">// TRAJETÓRIA</p>
+      <h2 id="journeyTitle" class="section__title">Minha jornada até aqui</h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline__line"></div>
+      <div id="journeyList"></div>
+    </div>
+  </section>
+
+  <section id="contato" class="section section--contact">
+    <div class="contact-card" data-reveal>
+      <div class="contact-card__mesh"></div>
+      <p id="contactKicker" class="kicker">// CONTATO</p>
+      <h2 id="contactTitle" class="contact__title">Vamos construir algo juntos?</h2>
+      <p id="contactText" class="contact__text">Aberto a novas oportunidades, colaborações e conversas sobre tecnologia. É só chamar.</p>
+      <div class="actions">
+        <a href="https://github.com/bielcarvalhoz" target="_blank" rel="noopener" class="btn btn--primary">GitHub ↗</a>
+        <a href="https://www.linkedin.com/in/gabriel-carvalho-fernandes00/" target="_blank" rel="noopener" class="btn btn--secondary">LinkedIn ↗</a>
       </div>
-    `;
-  }).join('');
+    </div>
+    <footer class="footer">
+      <span>© 2026 Gabriel Carvalho Fernandes</span>
+      <span id="builtWith">Feito com HTML, CSS & JS</span>
+    </footer>
+  </section>
 
-  pips.innerHTML = chapters.map((c, i) => {
-    const on = i === activeChapter;
-    return `
-      <div style="display:flex; align-items:center; gap:12px; font-family:'JetBrains Mono',monospace; font-size:12px; transition:color .3s; cursor:default; color:${on ? '#e8ecf4' : '#8b95a8'};">
-        <span style="width:${on ? '48px' : '24px'}; height:${on ? '2px' : '1px'}; background:${on ? '#34e3d4' : '#8b95a8'}; transition:background .3s, width .3s, height .3s; box-shadow:${on ? '0 0 10px #34e3d4' : 'none'};"></span>
-        <span>0${c.num} / ${c.label}</span>
-      </div>
-    `;
-  }).join('');
-}
-
-// ─── Language toggle ──────────────────────────────────────────────────────────
-function toggleLang() {
-  lang = lang === 'pt' ? 'en' : 'pt';
-  renderAll();
-}
-
-// ─── Scroll-driven stage ──────────────────────────────────────────────────────
-function tickScroll() {
-  const stage = document.getElementById('top');
-  const overlay = document.getElementById('stageOverlay');
-  if (!stage || !overlay) return;
-
-  const rect = stage.getBoundingClientRect();
-  const vh = window.innerHeight;
-  const range = stage.offsetHeight - vh;
-  const past = -rect.top;
-
-  let ty = 0;
-  if (past < 0) ty = -past;
-  else if (past > range) ty = range - past;
-  overlay.style.transform = `translateY(${ty}px)`;
-  overlay.style.pointerEvents = (past > range + vh || past < -vh) ? 'none' : 'auto';
-
-  const p = range > 0 ? Math.min(1, Math.max(0, past / range)) : 0;
-  scrollP = p;
-  targetRot = p * 270;
-
-  const sc = document.scrollingElement || document.documentElement;
-  const max = (sc.scrollHeight - sc.clientHeight) || 1;
-  const pageP = Math.min(1, Math.max(0, sc.scrollTop / max));
-  document.getElementById('progressBar').style.width = (pageP * 100) + '%';
-
-  const newActive = Math.min(3, Math.max(0, Math.round(p * 3)));
-  if (newActive !== activeChapter) {
-    activeChapter = newActive;
-    renderChapters();
-  }
-
-  const hint = document.getElementById('scrollHint');
-  if (hint) hint.style.opacity = p > 0.05 ? '0' : '1';
-}
-
-// ─── Carousel animation ───────────────────────────────────────────────────────
-function animateCarousel() {
-  tickScroll();
-  currentRot += (targetRot - currentRot) * 0.4;
-  const car = document.getElementById('carousel');
-  if (car) {
-    car.style.transform = `rotateX(-6deg) rotateY(${-currentRot}deg)`;
-    if (!faces) faces = car.querySelectorAll('[data-face]');
-    const r = ((currentRot % 360) + 360) % 360;
-    faces.forEach((el, i) => {
-      const faceAngle = i * 90;
-      let diff = Math.abs(((r - faceAngle + 540) % 360) - 180);
-      diff = 180 - diff;
-      const visible = Math.max(0, Math.min(1, diff / 110));
-      el.style.opacity = visible.toFixed(3);
-      el.style.pointerEvents = visible > 0.5 ? 'auto' : 'none';
-    });
-  }
-  animRafId = requestAnimationFrame(animateCarousel);
-}
-
-// ─── Reveal on scroll ─────────────────────────────────────────────────────────
-function initReveal() {
-  document.querySelectorAll('[data-reveal]').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(28px)';
-    el.style.transition = 'opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1)';
-  });
-
-  if (!('IntersectionObserver' in window)) {
-    document.querySelectorAll('[data-reveal]').forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
-    return;
-  }
-
-  intersectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        const el = e.target;
-        const sibs = Array.from(el.parentElement ? el.parentElement.querySelectorAll(':scope > [data-reveal]') : [el]);
-        const idx = Math.max(0, sibs.indexOf(el));
-        el.style.transitionDelay = (idx * 70) + 'ms';
-        el.style.opacity = '1';
-        el.style.transform = 'none';
-        intersectionObserver.unobserve(el);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-
-  document.querySelectorAll('[data-reveal]').forEach(el => intersectionObserver.observe(el));
-}
-
-// ─── 3D tilt on cards ─────────────────────────────────────────────────────────
-function initTilt() {
-  document.querySelectorAll('[data-tilt]').forEach(card => {
-    card.onmousemove = (e) => {
-      const r = card.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width - 0.5;
-      const py = (e.clientY - r.top) / r.height - 0.5;
-      card.style.transition = 'transform .12s ease, border-color .3s, box-shadow .3s';
-      card.style.transform = `perspective(800px) rotateY(${px * 8}deg) rotateX(${-py * 8}deg) translateY(-4px)`;
-    };
-    card.onmouseleave = () => {
-      card.style.transition = 'transform .4s ease, border-color .3s, box-shadow .3s';
-      card.style.transform = 'perspective(800px) rotateY(0) rotateX(0)';
-    };
-  });
-}
-
-// ─── Responsive stage layout ──────────────────────────────────────────────────
-function applyResponsive() {
-  const grid = document.getElementById('stageGrid');
-  const car = document.getElementById('carousel');
-  const navLinks = document.getElementById('navLinks');
-  const nav = document.getElementById('mainNav');
-  if (!grid || !car) return;
-
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  const mobile = vw <= 760;
-  const narrow = vw <= 1024;
-
-  if (navLinks) navLinks.style.display = mobile ? 'none' : 'flex';
-  if (nav) nav.style.padding = mobile ? '9px clamp(16px,4vw,56px)' : '18px clamp(20px,5vw,56px)';
-  const navH = nav ? nav.offsetHeight : (mobile ? 54 : 70);
-
-  const textCol = grid.children[0];
-  const boxCol = grid.children[1];
-  const pipsCol = grid.children[2];
-
-  if (mobile) {
-    grid.style.gridTemplateColumns = '1fr';
-    grid.style.padding = (navH + 44) + 'px 22px 50px';
-    grid.style.gap = '54px';
-    grid.style.justifyItems = 'stretch';
-    grid.style.alignContent = 'center';
-    grid.style.alignItems = 'center';
-    if (boxCol) boxCol.style.order = '1';
-    if (textCol) {
-      textCol.style.order = '2';
-      textCol.style.textAlign = 'center';
-      const inner = textCol.firstElementChild;
-      if (inner) inner.style.minHeight = '210px';
-    }
-    if (pipsCol) pipsCol.style.display = 'none';
-  } else {
-    grid.style.gridTemplateColumns = narrow ? '1fr 1fr' : '1fr 1.1fr 1fr';
-    grid.style.padding = '120px clamp(24px,6vw,80px) 80px';
-    grid.style.gap = '0';
-    grid.style.justifyItems = 'stretch';
-    grid.style.alignContent = 'center';
-    grid.style.alignItems = 'center';
-    if (boxCol) boxCol.style.order = '0';
-    if (textCol) {
-      textCol.style.order = '0';
-      textCol.style.textAlign = 'left';
-      const inner = textCol.firstElementChild;
-      if (inner) inner.style.minHeight = '280px';
-    }
-    if (pipsCol) pipsCol.style.display = narrow ? 'none' : 'block';
-  }
-
-  let w, h;
-  if (mobile) { w = Math.min(300, vw * 0.78); h = Math.round(w * 1.18); }
-  else { w = Math.min(360, vw * 0.38); h = Math.min(440, vh * 0.56); }
-  const depth = Math.round(w * 0.72);
-  car.style.width = Math.round(w) + 'px';
-  car.style.height = Math.round(h) + 'px';
-  car.style.setProperty('--depth', depth + 'px');
-}
-
-// ─── Canvas particle network ──────────────────────────────────────────────────
-function initCanvas() {
-  const canvas = document.getElementById('bgCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  let w = 0, h = 0, pts = [];
-  const C1 = [52, 227, 212], C2 = [143, 123, 255];
-  const lerp = (a, b, t) => Math.round(a + (b - a) * t);
-  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isMobile = window.matchMedia && window.matchMedia('(max-width: 760px)').matches;
-
-  const resize = () => {
-    w = window.innerWidth; h = window.innerHeight;
-    canvas.width = w * dpr; canvas.height = h * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const baseDensity = isMobile ? 28000 : 17000;
-    const count = Math.min(isMobile ? 40 : 80, Math.floor((w * h) / baseDensity));
-    pts = [];
-    for (let i = 0; i < count; i++) {
-      pts.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3 });
-    }
-  };
-  resize();
-  window.addEventListener('resize', resize);
-
-  window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
-  window.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
-
-  if (reduceMotion) {
-    const [R, G, B] = C1;
-    for (const p of pts) { ctx.fillStyle = `rgba(${R},${G},${B},0.6)`; ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2); ctx.fill(); }
-    return;
-  }
-
-  const frame = () => {
-    mouse.ax += (mouse.x - mouse.ax) * 0.12;
-    mouse.ay += (mouse.y - mouse.ay) * 0.12;
-    const tt = scrollP;
-    const R = lerp(C1[0], C2[0], tt), G = lerp(C1[1], C2[1], tt), B = lerp(C1[2], C2[2], tt);
-    ctx.clearRect(0, 0, w, h);
-    const mx = mouse.ax, my = mouse.ay;
-    for (const p of pts) {
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0 || p.x > w) p.vx *= -1;
-      if (p.y < 0 || p.y > h) p.vy *= -1;
-      const dx = p.x - mx, dy = p.y - my;
-      const d2 = dx * dx + dy * dy;
-      if (d2 < 17000 && d2 > 0.01) {
-        const f = (17000 - d2) / 17000 * 0.8;
-        const dd = Math.sqrt(d2);
-        p.x += (dx / dd) * f; p.y += (dy / dd) * f;
-      }
-    }
-    for (let i = 0; i < pts.length; i++) {
-      for (let j = i + 1; j < pts.length; j++) {
-        const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
-        const dd = Math.sqrt(dx * dx + dy * dy);
-        if (dd < 130) {
-          ctx.strokeStyle = `rgba(${R},${G},${B},${(1 - dd / 130) * 0.16})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke();
-        }
-      }
-      const dmx = pts[i].x - mx, dmy = pts[i].y - my;
-      const dm = Math.sqrt(dmx * dmx + dmy * dmy);
-      if (dm < 180) {
-        ctx.strokeStyle = `rgba(${R},${G},${B},${(1 - dm / 180) * 0.4})`;
-        ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(mx, my); ctx.stroke();
-      }
-      ctx.fillStyle = `rgba(${R},${G},${B},0.75)`;
-      ctx.beginPath(); ctx.arc(pts[i].x, pts[i].y, 1.6, 0, Math.PI * 2); ctx.fill();
-    }
-    canvasRafId = requestAnimationFrame(frame);
-  };
-  canvasRafId = requestAnimationFrame(frame);
-}
-
-// ─── Init ─────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  renderAll();
-  initReveal();
-  initCanvas();
-  applyResponsive();
-  animRafId = requestAnimationFrame(animateCarousel);
-
-  window.addEventListener('scroll', tickScroll, { passive: true });
-  window.addEventListener('resize', applyResponsive, { passive: true });
-
-  tickScroll();
-});
-</script>
+  <script src="js/content.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>

@@ -45,7 +45,12 @@ Site estático de página única, escrito em **HTML, CSS e JavaScript puro** —
 
 ```
 site_carvalho/
-├── index.html          # todo o site (HTML + CSS + JS)
+├── index.html          # marcação da página
+├── css/
+│   └── styles.css      # estilos e variáveis de tema
+├── js/
+│   ├── content.js      # textos (PT/EN) e dados
+│   └── main.js         # interações e animações
 ├── images/
 │   └── gabriel.jpeg    # foto de perfil
 └── .gitignore
