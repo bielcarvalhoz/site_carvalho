@@ -126,6 +126,17 @@ function renderChapters() {
   `).join('');
 }
 
+function updateActiveChapter() {
+  const chapters = $('chaptersContainer').children;
+  const pips = $('chapterPips').children;
+  for (let i = 0; i < chapters.length; i++) {
+    chapters[i].classList.toggle('is-active', i === state.activeChapter);
+  }
+  for (let i = 0; i < pips.length; i++) {
+    pips[i].classList.toggle('is-active', i === state.activeChapter);
+  }
+}
+
 function toggleLang() {
   state.lang = state.lang === 'pt' ? 'en' : 'pt';
   renderAll();
@@ -159,7 +170,7 @@ function tickScroll() {
   const newActive = Math.min(3, Math.max(0, Math.round(p * 3)));
   if (newActive !== state.activeChapter) {
     state.activeChapter = newActive;
-    renderChapters();
+    updateActiveChapter();
   }
 
   const hint = $('scrollHint');
