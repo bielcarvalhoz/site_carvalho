@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gabriel Carvalho — Full-Stack Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <canvas id="bgCanvas" class="bg-canvas"></canvas>
+  <div class="bg-glow"></div>
+  <div class="bg-mesh"></div>
+
+  <div class="progress">
+    <div id="progressBar" class="progress__bar"></div>
+  </div>
+
+  <nav id="mainNav" class="nav">
+    <a href="#top" class="nav__brand">
+      <span class="nav__logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M5 8l4 4-4 4" stroke="#34e3d4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 17h7" stroke="#34e3d4" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="nav__wordmark">gabrielcarv<span>.com.br</span></span>
+    </a>
+    <div class="nav__right">
+      <div id="navLinks" class="nav__links">
+        <a href="#stack" class="nav__link" id="navStack">Stack</a>
+        <a href="#projetos" class="nav__link" id="navProjects">Projetos</a>
+        <a href="#jornada" class="nav__link" id="navJourney">Jornada</a>
+        <a href="#contato" class="nav__link" id="navContact">Contato</a>
+      </div>
+      <button id="langToggle" class="lang" type="button" onclick="toggleLang()">
+        <span id="ptBtn" class="lang__pill is-active">PT</span>
+        <span id="enBtn" class="lang__pill">EN</span>
+      </button>
+    </div>
+  </nav>
+
+  <section id="top" class="stage-spacer"></section>
+
+  <div id="stageOverlay" class="stage">
+    <div id="stageGrid" class="stage__grid">
+
+      <div class="stage__col stage__col--text">
+        <div id="chaptersContainer" class="chapters"></div>
+      </div>
+
+      <div class="stage__col stage__col--carousel">
+        <div class="carousel-perspective">
+          <div id="carousel" class="carousel">
+            <div class="carousel__glow"></div>
+
+            <div data-face="0" class="face face--code">
+              <div class="win__bar">
+                <span class="win__dot win__dot--red"></span>
+                <span class="win__dot win__dot--yellow"></span>
+                <span class="win__dot win__dot--green"></span>
+                <span class="win__title">gabriel.ts</span>
+              </div>
+              <pre class="code"><span class="c-acc2">const</span> <span class="c-acc">dev</span> = {
+  <span class="c-text">name</span>: <span class="c-amber">'Gabriel'</span>,
+  <span class="c-text">role</span>: <span class="c-amber">'Full-Stack'</span>,
+  <span class="c-text">stack</span>: [<span class="c-amber">'TS'</span>,<span class="c-amber">'Node'</span>,<span class="c-amber">'Py'</span>],
+  <span class="c-text">years</span>: <span class="c-amber">4</span>,
+  <span class="c-text">ship</span>: () =&gt; <span class="c-acc">true</span>,
+};
+
+<span class="c-acc2">export default</span> <span class="c-acc">dev</span>;</pre>
+            </div>
+
+            <div data-face="1" class="face face--terminal">
+              <div class="win__bar">
+                <span class="win__dot win__dot--red"></span>
+                <span class="win__dot win__dot--yellow"></span>
+                <span class="win__dot win__dot--green"></span>
+                <span class="win__title">~ — zsh</span>
+              </div>
+              <div class="term">
+                <div><span class="c-acc">➜</span> <span class="c-acc2">~</span> whoami</div>
+                <div class="c-text term__indent">gabriel-carvalho</div>
+                <div class="term__row"><span class="c-acc">➜</span> <span class="c-acc2">~</span> cat stack.txt</div>
+                <div class="c-soft term__indent">HTML · CSS · JS · TS</div>
+                <div class="c-soft term__indent">Node · Python · Django</div>
+                <div class="c-soft term__indent">Angular · Elixir · SQL</div>
+                <div class="term__row"><span class="c-acc">➜</span> <span class="c-acc2">~</span> uptime</div>
+                <div class="c-amber term__indent">4+ yrs @ Bradesco</div>
+                <div class="term__row"><span class="c-acc">➜</span> <span class="c-acc2">~</span> <span class="term__cursor"></span></div>
+              </div>
+            </div>
+
+            <div data-face="2" class="face face--photo">
+              <img src="images/gabriel.jpeg" alt="Gabriel Carvalho" class="face__img">
+              <div class="face__scrim"></div>
+              <div class="face__caption">
+                <div class="badge-live">
+                  <span class="badge-live__dot"></span>
+                  <span id="faceLive">disponível</span>
+                </div>
+                <div class="face__name">Gabriel Carvalho</div>
+                <div id="faceRole" class="face__role">Full-Stack Developer</div>
+              </div>
+            </div>
+
+            <div data-face="3" class="face face--stack">
+              <div class="face__label">// STACK</div>
+              <div id="faceTechGrid" class="face-techs"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage__col stage__col--pips">
+        <div id="chapterPips" class="pips"></div>
+      </div>
+    </div>
+
+    <div id="scrollHint" class="hint">
+      <span id="hintText">ROLE PARA EXPLORAR</span>
+      <span class="hint__line"></span>
+    </div>
+  </div>
+
+  <section class="section section--release">
+    <span class="pill release__pill" data-reveal>
+      <span class="pill__dot"></span>
+      <span id="releaseKicker">AGORA, OS DETALHES</span>
+    </span>
+    <h1 id="releaseTitle" class="release__title" data-reveal>
+      Tudo o que você precisa saber sobre o <span class="text-gradient">Gabriel.</span>
+    </h1>
+    <p id="releaseBody" class="release__body" data-reveal>Stack, projetos, trajetória e contato — sem rodeios.</p>
+    <div class="actions" data-reveal>
+      <a href="#projetos" class="btn btn--primary" id="releaseCta1">Ver projetos →</a>
+      <a href="#contato" class="btn btn--secondary" id="releaseCta2">Entrar em contato</a>
+    </div>
+  </section>
+
+  <section id="stack" class="section section--stack">
+    <div class="section__head" data-reveal>
+      <p id="stackKicker" class="kicker">// STACK</p>
+      <h2 id="stackTitle" class="section__title">Tecnologias que eu domino</h2>
+      <p id="stackSub" class="section__sub">O conjunto de ferramentas que uso no dia a dia, do front ao back e à camada de dados.</p>
+    </div>
+    <div id="techGrid" class="tech-grid"></div>
+  </section>
+
+  <section id="projetos" class="section section--projects">
+    <div class="section__head" data-reveal>
+      <p id="projectsKicker" class="kicker">// TRABALHOS</p>
+      <h2 id="projectsTitle" class="section__title">Projetos selecionados</h2>
+      <p id="projectsSub" class="section__sub">Uma amostra do que construo. Em breve casos reais — por enquanto, espaços reservados.</p>
+    </div>
+    <div id="projectsGrid" class="projects-grid"></div>
+  </section>
+
+  <section id="jornada" class="section section--narrow section--journey">
+    <div class="section__head" data-reveal>
+      <p id="journeyKicker" class="kicker">// TRAJETÓRIA</p>
+      <h2 id="journeyTitle" class="section__title">Minha jornada até aqui</h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline__line"></div>
+      <div id="journeyList"></div>
+    </div>
+  </section>
+
+  <section id="contato" class="section section--contact">
+    <div class="contact-card" data-reveal>
+      <div class="contact-card__mesh"></div>
+      <p id="contactKicker" class="kicker">// CONTATO</p>
+      <h2 id="contactTitle" class="contact__title">Vamos construir algo juntos?</h2>
+      <p id="contactText" class="contact__text">Aberto a novas oportunidades, colaborações e conversas sobre tecnologia. É só chamar.</p>
+      <div class="actions">
+        <a href="https://github.com/bielcarvalhoz" target="_blank" rel="noopener" class="btn btn--primary">GitHub ↗</a>
+        <a href="https://www.linkedin.com/in/gabriel-carvalho-fernandes00/" target="_blank" rel="noopener" class="btn btn--secondary">LinkedIn ↗</a>
+      </div>
+    </div>
+    <footer class="footer">
+      <span>© 2026 Gabriel Carvalho Fernandes</span>
+      <span id="builtWith">Feito com HTML, CSS & JS</span>
+    </footer>
+  </section>
+
+  <script src="js/content.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
