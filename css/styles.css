@@ -899,6 +899,15 @@ body {
   font-family: var(--font-mono);
 }
 
+.project-card__links a {
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.project-card__links a:hover {
+  opacity: 0.6;
+}
+
 /* Journey timeline */
 .timeline {
   position: relative;

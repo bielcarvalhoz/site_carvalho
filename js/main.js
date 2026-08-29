@@ -67,8 +67,8 @@ function renderAll() {
           ${p.tags.map((tag) => `<span class="tag">${tag}</span>`).join('')}
         </div>
         <div class="project-card__links">
-          <span class="c-acc">${c.projects.demo} ↗</span>
-          <span class="c-muted">${c.projects.code} ↗</span>
+          ${p.demo ? `<a class="c-acc" href="${p.demo}" target="_blank" rel="noopener">${c.projects.demo} ↗</a>` : ''}
+          ${p.repo ? `<a class="c-muted" href="${p.repo}" target="_blank" rel="noopener">${c.projects.code} ↗</a>` : ''}
         </div>
       </div>
     </article>
