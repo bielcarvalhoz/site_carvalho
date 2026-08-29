@@ -11,7 +11,7 @@ const CONTENT = {
     ],
     release: { kicker: 'AGORA, OS DETALHES', title1: 'Tudo o que você precisa saber sobre o', title2: 'Gabriel.', body: 'Stack, projetos, trajetória e contato — sem rodeios.', cta1: 'Ver projetos →', cta2: 'Entrar em contato' },
     stackS: { kicker: '// STACK', title: 'Tecnologias que eu domino', sub: 'O conjunto de ferramentas que uso no dia a dia, do front ao back e à camada de dados.' },
-    projects: { kicker: '// TRABALHOS', title: 'Projetos selecionados', sub: 'Uma amostra do que construo. Em breve casos reais — por enquanto, espaços reservados.', demo: 'Demo', code: 'Código' },
+    projects: { kicker: '// TRABALHOS', title: 'Projetos selecionados', sub: 'Uma amostra do que construo — do front-end à camada de dados, todos no ar.', demo: 'Demo', code: 'Código' },
     journey: { kicker: '// TRAJETÓRIA', title: 'Minha jornada até aqui' },
     contact: { kicker: '// CONTATO', title: 'Vamos construir algo juntos?', text: 'Aberto a novas oportunidades, colaborações e conversas sobre tecnologia. É só chamar.', built: 'Feito com HTML, CSS & JS' }
   },
@@ -27,7 +27,7 @@ const CONTENT = {
     ],
     release: { kicker: 'NOW, THE DETAILS', title1: 'Everything you need to know about', title2: 'Gabriel.', body: 'Stack, projects, journey and contact — straight to the point.', cta1: 'View projects →', cta2: 'Get in touch' },
     stackS: { kicker: '// STACK', title: 'Technologies I work with', sub: 'The toolkit I use every day, from the front end to the back end and the data layer.' },
-    projects: { kicker: '// WORK', title: 'Selected projects', sub: 'A sample of what I build. Real case studies coming soon — placeholders for now.', demo: 'Demo', code: 'Code' },
+    projects: { kicker: '// WORK', title: 'Selected projects', sub: 'A sample of what I build — from the front end to the data layer, all live.', demo: 'Demo', code: 'Code' },
     journey: { kicker: '// PATH', title: 'My journey so far' },
     contact: { kicker: '// CONTACT', title: "Let's build something together?", text: 'Open to new opportunities, collaborations and conversations about tech. Just reach out.', built: 'Built with HTML, CSS & JS' }
   }
@@ -58,10 +58,10 @@ const DATA = {
       { name: 'HTML/CSS', color: '#8f7bff' }
     ],
     projects: [
-      { n: '01', title: 'Projeto em destaque', desc: 'Substitua por um caso real: o problema, sua solução e o impacto.', tags: ['TypeScript', 'Angular', 'Node'], shot: 'imagem do projeto' },
-      { n: '02', title: 'Aplicação web', desc: 'Espaço reservado para um produto que você construiu de ponta a ponta.', tags: ['Python', 'Django', 'SQL'], shot: 'imagem do projeto' },
-      { n: '03', title: 'Experimento', desc: 'Um projeto pessoal, side-project ou prova de conceito.', tags: ['JavaScript', 'Node', 'Elixir'], shot: 'imagem do projeto' },
-      { n: '04', title: 'Open source', desc: 'Uma contribuição ou biblioteca que você mantém.', tags: ['HTML', 'CSS', 'JS'], shot: 'imagem do projeto' }
+      { n: '01', title: 'TabNews — clone fullstack', desc: 'Réplica do TabNews: API REST em Next.js, PostgreSQL com migrations, autenticação por sessão e suíte de testes em Jest, com deploy contínuo na Vercel.', tags: ['Next.js', 'Node.js', 'PostgreSQL', 'Jest'], shot: 'tab-news', demo: 'https://tab-news-ten.vercel.app', repo: 'https://github.com/bielcarvalhoz/tab-news' },
+      { n: '02', title: 'ReciclaMente — jogo da memória', desc: 'Jogo da memória em React com três níveis de dificuldade, pontuação por tempo e movimentos e placar dos 10 melhores salvo no Firebase. Back-end em Node e Express.', tags: ['React', 'Node.js', 'Express', 'Firebase'], shot: 'reciclamente', demo: 'https://jogo-memoria-v2-kappa.vercel.app', repo: 'https://github.com/bielcarvalhoz/jogo_memoria_v2' },
+      { n: '03', title: 'Bytebank — banco em TypeScript', desc: 'Banco digital com depósito, saque e transferência, modelado com orientação a objetos e tipagem forte em TypeScript e estado persistido no navegador.', tags: ['TypeScript', 'POO', 'LocalStorage'], shot: 'bytebank', demo: 'https://projeto-focus-one-orcin.vercel.app', repo: 'https://github.com/bielcarvalhoz/projeto-typescript-bytebank' },
+      { n: '04', title: 'CarvalhoBooks — landing responsiva', desc: 'Landing page construída com a estratégia Mobile First: media queries e layout fluido do celular ao desktop, com foco em HTML semântico e CSS.', tags: ['HTML', 'CSS', 'Mobile First'], shot: 'carvalhobooks', demo: 'https://bielcarvalhoz.github.io/CarvalhoBooks/', repo: 'https://github.com/bielcarvalhoz/CarvalhoBooks' }
     ],
     journey: [
       { when: 'Out 2023 — Hoje', role: 'Desenvolvedor Web Júnior', place: 'Bradesco', desc: 'Efetivado em 14/10/2023, evoluí de estagiário a desenvolvedor júnior — há 4 anos no Bradesco, entregando aplicações web em produção.' },
@@ -94,10 +94,10 @@ const DATA = {
       { name: 'HTML/CSS', color: '#8f7bff' }
     ],
     projects: [
-      { n: '01', title: 'Featured project', desc: 'Replace with a real case: the problem, your solution and the impact.', tags: ['TypeScript', 'Angular', 'Node'], shot: 'project shot' },
-      { n: '02', title: 'Web application', desc: 'Placeholder for a product you built end to end.', tags: ['Python', 'Django', 'SQL'], shot: 'project shot' },
-      { n: '03', title: 'Experiment', desc: 'A personal project, side-project or proof of concept.', tags: ['JavaScript', 'Node', 'Elixir'], shot: 'project shot' },
-      { n: '04', title: 'Open source', desc: 'A contribution or library you maintain.', tags: ['HTML', 'CSS', 'JS'], shot: 'project shot' }
+      { n: '01', title: 'TabNews — fullstack clone', desc: 'A TabNews replica: REST API in Next.js, PostgreSQL with migrations, session auth and a Jest test suite, with continuous deployment on Vercel.', tags: ['Next.js', 'Node.js', 'PostgreSQL', 'Jest'], shot: 'tab-news', demo: 'https://tab-news-ten.vercel.app', repo: 'https://github.com/bielcarvalhoz/tab-news' },
+      { n: '02', title: 'ReciclaMente — memory game', desc: 'A React memory game with three difficulty levels, scoring by time and moves, and a top-10 leaderboard stored in Firebase. Back end in Node and Express.', tags: ['React', 'Node.js', 'Express', 'Firebase'], shot: 'reciclamente', demo: 'https://jogo-memoria-v2-kappa.vercel.app', repo: 'https://github.com/bielcarvalhoz/jogo_memoria_v2' },
+      { n: '03', title: 'Bytebank — bank in TypeScript', desc: 'A digital bank with deposits, withdrawals and transfers, modeled with object-oriented design and strong typing in TypeScript, state persisted in the browser.', tags: ['TypeScript', 'OOP', 'LocalStorage'], shot: 'bytebank', demo: 'https://projeto-focus-one-orcin.vercel.app', repo: 'https://github.com/bielcarvalhoz/projeto-typescript-bytebank' },
+      { n: '04', title: 'CarvalhoBooks — responsive landing', desc: 'A landing page built with a Mobile First strategy: media queries and fluid layout from phone to desktop, with a focus on semantic HTML and CSS.', tags: ['HTML', 'CSS', 'Mobile First'], shot: 'carvalhobooks', demo: 'https://bielcarvalhoz.github.io/CarvalhoBooks/', repo: 'https://github.com/bielcarvalhoz/CarvalhoBooks' }
     ],
     journey: [
       { when: 'Oct 2023 — Today', role: 'Junior Web Developer', place: 'Bradesco', desc: 'Made permanent on Oct 14, 2023, I grew from intern to junior developer — 4 years at Bradesco, shipping web apps to production.' },
